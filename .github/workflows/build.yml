@@ -16,7 +16,7 @@ jobs:
       image: docker.io/marks990/tools:v1
       env:
         STORAGE_DRIVER: vfs
-      # options: --privileged  # Required for buildah
+      options: --privileged  # Required for buildah
 
     steps:
       - name: Checkout code
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: docker.io/marks990/tools:v1
-      # options: --privileged
+      options: --privileged
 
     needs: build
     steps:
