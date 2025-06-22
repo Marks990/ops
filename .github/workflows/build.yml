@@ -27,7 +27,8 @@ jobs:
           buildah version
           ls -larth
           ls -larth dockerfiles
-          buildah bud --build-arg BASE_IMAGE=$BASE_IMAGE --storage-driver=vfs -f dockerfiles/simple_Dockerfile -t $IMAGE_NAME .
+          env
+          buildah bud --build-arg BASE_IMAGE=$BASE_IMAGE -f dockerfiles/simple_Dockerfile -t $IMAGE_NAME .
 
       - name: Save image ID
         id: save_image
