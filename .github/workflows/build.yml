@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  IMAGE_NAME: meme:987
+  BASE_IMAGE: "redhat/ubi9:latest"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,32 +25,30 @@ jobs:
       - name: Build image with Buildah
         run: |
           buildah version
-          git version
-          podman --version
-          pwd
           ls -larth
           ls -larth dockerfiles
-          # buildah bud -t localhost/myapp:latest .
+          buildah bud --build-arg BASE_IMAGE=$BASE_IMAGE -f dockerfiles/simple_Dockerfile -t $IMAGE_NAME .
 
-      # - name: Save image ID
-      #   id: save_image
-      #   run: |
-      #     echo "image_id=$(buildah images -q localhost/myapp:latest)" >> $GITHUB_OUTPUT
+      - name: Save image ID
+        id: save_image
+        run: |
+          echo "image_id=$(buildah images -q localhost/myapp:latest)" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: quay.io/containers/podman:latest
-  #     options: --privileged
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/marks990/tools:v1
+      # options: --privileged
 
-  #   needs: build
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  #     - name: Test container with Podman
-  #       run: |
-  #         podman run --rm localhost/myapp:latest /bin/sh -c "echo 'Insert your test here'"
+      - name: Test container with Podman
+        run: |
+          podman run --rm $IMAGE_NAME /bin/bash -c "python --version"
 
   # push:
   #   runs-on: ubuntu-latest
