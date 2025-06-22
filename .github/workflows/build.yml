@@ -33,7 +33,7 @@ jobs:
       - name: Save image ID
         id: save_image
         run: |
-          echo "image_id=$(buildah images -q localhost/myapp:latest)" >> $GITHUB_OUTPUT
+          echo "image_id=$(buildah images -q $IMAGE_NAME)" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
 
   test:
