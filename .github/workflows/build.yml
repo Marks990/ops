@@ -8,14 +8,13 @@ on:
 env:
   IMAGE_NAME: meme:987
   BASE_IMAGE: "redhat/ubi9:latest"
+  STORAGE_DRIVER: vfs
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container:
       image: docker.io/marks990/tools:v1
-      env:
-        STORAGE_DRIVER: vfs
       options: --privileged  # Required for buildah
 
     steps:
