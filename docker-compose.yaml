@@ -1,0 +1,16 @@
+# docker compose up --build
+# docker compose down --rmi all
+services:
+  terra:
+    image: docker.io/marks990/tools:v1
+    container_name: terra
+    build:
+      context: .
+      dockerfile: dockerfiles/tools_Dockerfile
+      args:
+        PRODUCT: terraform
+        VERSION: 1.12.1
+    volumes: 
+        - ./:/app
+    privileged: true
+    entrypoint: ["sleep", "1000000"]

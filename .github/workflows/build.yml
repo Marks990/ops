@@ -1,0 +1,69 @@
+name: Buildah Podman Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: docker.io/marks990/tools:v1
+      env:
+        STORAGE_DRIVER: vfs
+      # options: --privileged  # Required for buildah
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build image with Buildah
+        run: |
+          buildah version
+          git version
+          podman --version
+          pwd
+          ls -larth
+          ls -larth dockerfiles
+          # buildah bud -t localhost/myapp:latest .
+
+      # - name: Save image ID
+      #   id: save_image
+      #   run: |
+      #     echo "image_id=$(buildah images -q localhost/myapp:latest)" >> $GITHUB_OUTPUT
+
+  # test:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: quay.io/containers/podman:latest
+  #     options: --privileged
+
+  #   needs: build
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Test container with Podman
+  #       run: |
+  #         podman run --rm localhost/myapp:latest /bin/sh -c "echo 'Insert your test here'"
+
+  # push:
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: quay.io/containers/buildah:latest
+  #     options: --privileged
+
+  #   needs: test
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Login to Docker Hub
+  #       run: |
+  #         buildah login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} docker.io
+
+  #     - name: Tag and Push Image
+  #       run: |
+  #         buildah tag localhost/myapp:latest docker.io/your-dockerhub-username/myapp:latest
+  #         buildah push docker.io/your-dockerhub-username/myapp:latest
